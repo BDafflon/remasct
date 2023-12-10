@@ -1,0 +1,51 @@
+.appBar{
+    background-color: #34495e;
+}
+.etudeSelector {
+  background-color: #34495e;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+.maplibregl-marker:hover {
+    z-index: 1000;
+  }
+  .css-i9fmh8-MuiBackdrop-root-MuiModal-backdrop{
+    background-color: rgba(0, 0, 0, 0);
+  }
+.tooltip {
+  pointer-events: none; 
+  position: absolute; 
+ 
+  font-size: 12px; 
+  padding: 8px; 
+  background: #000; 
+  color: #fff; 
+  min-width: 160px; 
+  max-height: 240px; 
+  overflow-y: hidden;}
+ 
+  .new-line {
+    white-space: pre-line;
+  }
+
+  .demo-card-square.mdl-card {
+    width: 320px;
+    height: 320px;
+    float: left;
+    margin: 1rem;
+    position: relative;
+ 
+  }
+  
+  .demo-card-square.mdl-card:hover {
+    box-shadow: 0 8px 10px 1px rgba(0, 0, 0, .14), 0 3px 14px 2px rgba(0, 0, 0, .12), 0 5px 5px -3px rgba(0, 0, 0, .2);
+  }
+  
+  .demo-card-square > .mdl-card__title {
+ 
+    background: #03a9f4;
+  }
+  
+  .demo-card-square > .mdl-card__accent {
+    background: #ff9800;
+  }
