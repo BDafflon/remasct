@@ -7,9 +7,9 @@ from sma.environment.messages import Message
 
 
 class Agent:
-    def __init__(self,type="",line="",vehicle=None):
+    def __init__(self,type="",origine=[], destination=[],vehicle=None):
         self.uuid=random.randint(10000000,100000000)
-        self.body=Body(line,vehicle)
+        self.body=Body(origine,destination,vehicle)
         self.perceptionsItem=[]
         self.perceptionsAgent=[]
         self.type=type
@@ -34,15 +34,14 @@ class Agent:
                         if len(self.body.mailbox)>0:
                             msg=self.body.mailbox[0]
                             if msg.msg=="REQUEST ACCEPTED":
-                                print("REQUEST ACCEPTED")
-                                self.body.visible=False
-                                msg.from_to.type="CARPOOL"
-                                msg.from_to.body.vehicle.passager.append(self.uuid)
-                                self.stats = "ON RIDE"
+                                if driver[0].distance_to <20:
+                                    self.body.visible=False
+                                    msg.from_to.type="CARPOOL"
+                                    msg.from_to.body.vehicle.passager.append(self.uuid)
+                                    self.stats = "ON RIDE"
         if self.type=="Driver":
-            
+            self.body.vel=1
             if len(self.perceptionsAgent):
-                
                 rider = [i for i in self.perceptionsAgent if i.vehicle is None]
                 if len(rider)>0:
                     if len(self.body.mailbox)>0:

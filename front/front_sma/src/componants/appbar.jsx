@@ -18,7 +18,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 
-export default function ButtonAppBar({study, setStudy, setDrawer, drawer}) {
+export default function ButtonAppBar({  setDrawer, drawer}) {
   const [open, setOpen] = React.useState(false);
   const goHome = () => {
     setOpen(true);
@@ -38,16 +38,15 @@ export default function ButtonAppBar({study, setStudy, setDrawer, drawer}) {
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          {"Fermeture de l'étude ?"}
+          {"Fermeture la simulation ?"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-          Cette page vous demande de confirmer sa fermeture.
-          Des données que vous avez saisies pourraient ne pas être enregistrées.
+          
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-        <Button  color="error" variant="contained" onClick={()=>setStudy(undefined)}>Confirmer</Button>
+        <Button  color="error" variant="contained" >Confirmer</Button>
         <Button onClick={handleClose} autoFocus> Annuler </Button>
           
           

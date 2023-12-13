@@ -4,7 +4,7 @@ from helper.math import lerp
 from sma.body.fustrum import Fustrum
 from time_aware_polyline import decode_time_aware_polyline
 from datetime import datetime, timedelta
-
+from helper.routing import get_route
 
 def date_to_datetime(dateStr):
     try:
@@ -17,12 +17,12 @@ def date_to_datetime(dateStr):
     return date_time_obj
 
 class Body:
-    def __init__(self,line,vehicle):
+    def __init__(self,origine,destination,vehicle):
         self.fustrum = Fustrum()
         self.uuid=random.randint(10000000,100000000)
-        self.polyline = line
-        self.path=  decode_time_aware_polyline(self.polyline)
-        if len(self.path[0])>0:
+
+        self.path= get_route(origine,destination)
+        if len(self.path)>0:
             self.pos = self.path[0]
         else:
             self.pos=[random.randint(0,10000),random.randint(10000,0)]
@@ -30,26 +30,33 @@ class Body:
         self.visible=True
         self.vehicle=vehicle
         self.mass=10
-        self.vel = 10
+        self.vel = 0
         self.mailbox=[]
 
 
+
     def update(self,tic):
-        if len(self.path)>1:
+        if self.vel==1:
+            if len(self.path)>1:
+                while self.path[1][2]<tic :
+                    self.pos=self.path[1]
+                    self.path=self.path[1:]
 
-            if date_to_datetime(self.path[1][2])<tic:
-                self.pos=self.path[1]
-                self.path=self.path[1:]
+
+
+                if self.path[1][2]<tic:
+                    self.pos=self.path[1]
+                    self.path=self.path[1:]
+                else:
+
+                    tic_ts = tic
+                    iv=self.path[0][2]
+                    ov=self.path[1][2]
+
+                    self.pos = [lerp(tic_ts,iv,ov,self.path[0][0],self.path[1][0]),
+                                lerp(tic_ts,iv,ov,self.path[0][1],self.path[1][1])]
+
+
             else:
-
-                tic_ts = datetime.timestamp(tic)
-                iv=datetime.timestamp(date_to_datetime(self.path[0][2]))
-                ov=datetime.timestamp(date_to_datetime(self.path[1][2]))
-
-                self.pos = [lerp(tic_ts,iv,ov,self.path[0][0],self.path[1][0]),
-                            lerp(tic_ts,iv,ov,self.path[0][1],self.path[1][1])]
-
-
-        else:
-            self.pos = [0,0]
+                self.pos = [0,0]
 

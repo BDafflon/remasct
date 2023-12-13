@@ -7,24 +7,15 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import ButtonAppBar from '../componants/appbar';
 import MapEcov from '../componants/mapecov';
-import HoverMap from '../componants/modal/hoverMap';
-import Stack from '@mui/material/Stack';
-import Avatar from '@mui/material/Avatar';
-import { getIconLayer, getLayers } from '../componants/layers/layers';
-import List from '@mui/material/List';
-import ListSubheader from '@mui/material/ListSubheader';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import { getIconLayer } from '../componants/layers/layers';
 import IconButton from '@mui/material/IconButton';
-import { Button, Divider, TextField, Typography } from '@mui/material';
-import OpenWithIcon from '@mui/icons-material/OpenWith';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { lerp } from '../util/math';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import FastRewindIcon from '@mui/icons-material/FastRewind';
+import FastForwardIcon from '@mui/icons-material/FastForward';
+import PauseIcon from '@mui/icons-material/Pause';
+import StopIcon from '@mui/icons-material/Stop';
 import { socket } from './socket';
-import IconLayerSma from '../componants/layers/iconlayer';
+import { Typography } from '@mui/material';
 
 const drawerWidth = 270;
 export var showAll = Date.now();  
@@ -56,6 +47,7 @@ export default function Dashboard() {
     const [simulation, setSimulation] = React.useState(undefined)
     const [layers, setLayer] = React.useState([])
     const [iconLayer, setIconLayer]=React.useState(getIconLayer())
+    const [control, setControl] = React.useState({speed:1,play:true})
 
   useEffect(() => {
     
@@ -73,6 +65,7 @@ export default function Dashboard() {
  
     setSimulation(JSON.parse(data))
     sim=JSON.parse(data)
+    setControl({...sim.control})
     let t=[]
     iconLayer.forEach(element => {
       t.push(element.clone({data:sim}))
@@ -106,7 +99,26 @@ export default function Dashboard() {
     };
   }, []);
 
-     
+     const handlePlayPause=(d)=>{
+      socket.timeout(5000).emit('update-play-pause', d, () => {
+      
+      });
+
+     }
+
+     const handleStop=()=>{
+      socket.timeout(5000).emit('update-stop', () => {
+      
+      });
+
+     }
+
+     const handleSpeed=(d)=>{
+      socket.timeout(5000).emit('update-speed',d, () => {
+      
+      });
+
+     }
  
      
  
@@ -125,6 +137,26 @@ export default function Dashboard() {
         }}
       >
         <Toolbar  />
+        <Box sx={{ml:2, mt:2}} >
+          <Typography variant="overline" display="block" gutterBottom >Control</Typography>
+       
+        <IconButton onClick={()=>handleSpeed(-0.1)} aria-label="delete">
+          <FastRewindIcon />
+        </IconButton>
+        <IconButton onClick={()=>handlePlayPause(!control.play)} aria-label="delete">
+          {control.play?<PauseIcon /> : <PlayArrowIcon />}
+        </IconButton>
+        <IconButton onClick={()=>handleStop()} aria-label="delete">
+          <StopIcon />
+        </IconButton>
+       
+        <IconButton onClick={()=>handleSpeed(0.1)} aria-label="delete">
+          <FastForwardIcon />
+        </IconButton>
+        
+        
+        </Box>
+      
         
  
 
