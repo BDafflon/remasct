@@ -1,4 +1,4 @@
 import { io } from 'socket.io-client';
 
-export const socket = io("http://0.0.0.0:5050");
+export const socket = io("http://127.0.0.1:5050");
 

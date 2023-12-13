@@ -10,7 +10,7 @@ import MapEcov from '../componants/mapecov';
 import HoverMap from '../componants/modal/hoverMap';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
-import { getLayers } from '../componants/layers/layers';
+import { getIconLayer, getLayers } from '../componants/layers/layers';
 import List from '@mui/material/List';
 import ListSubheader from '@mui/material/ListSubheader';
 import ListItem from '@mui/material/ListItem';
@@ -24,8 +24,10 @@ import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { lerp } from '../util/math';
 import { socket } from './socket';
+import IconLayerSma from '../componants/layers/iconlayer';
 
 const drawerWidth = 270;
+export var showAll = Date.now();  
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -39,21 +41,25 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
   });
 
-  
+export var sim=undefined
 export default function Dashboard() {
      
-     const [hoverInfo, setHoverInfo] = React.useState();
-     const [layers, setLayer] = React.useState([])
-     const [filters, setFilters] = React.useState([])
-     const [isLoading, toggleLoading] = React.useState(false)
+     
+    const [hoverInfo, setHoverInfo] = React.useState();
+     
+    const [filters, setFilters] = React.useState([])
+    const [isLoading, toggleLoading] = React.useState(false)
       
-     const [focus, setFocus] = React.useState()
+    const [focus, setFocus] = React.useState()
     const [drawer, setDrawer] = React.useState(true)
-      const [mapStyle, setMapStyle ]=React.useState("mapbox://styles/clement-marchal/clnn8nr9v002m01pa22h11072")
-      const [simulation, setSimulation] = React.useState(undefined)
+    const [mapStyle, setMapStyle ]=React.useState("https://basemaps.cartocdn.com/gl/positron-gl-style/style.json")
+    const [simulation, setSimulation] = React.useState(undefined)
+    const [layers, setLayer] = React.useState(getLayers(setHoverInfo,toggleLoading,setFocus))
+    const [iconLayer, setIconLayer]=React.useState(getIconLayer())
 
   useEffect(() => {
-    const timer = setTimeout(() =>  askUpdate(), 100)
+    
+    const timer = setTimeout(() =>  askUpdate(), 1000)
     return () => clearTimeout(timer)
   }, [simulation]);
 
@@ -62,11 +68,21 @@ export default function Dashboard() {
       
     });
   }
+
   const update=(data)=>{
  
     setSimulation(JSON.parse(data))
+    sim=JSON.parse(data)
+    let t=[]
+    iconLayer.forEach(element => {
+      t.push(element.clone({data:sim}))
+    });
+    setIconLayer(t)
+    
   }
   useEffect(() => {
+    
+
     function onConnect() {
       setIsConnected(true);
     }
@@ -91,11 +107,7 @@ export default function Dashboard() {
   }, []);
 
      
-  
-  useEffect(()=>{
-    setLayer(getLayers(setHoverInfo,toggleLoading,setFocus))
-  },[])
-  
+ 
      
  
   return (
@@ -113,68 +125,15 @@ export default function Dashboard() {
         }}
       >
         <Toolbar  />
-        <Stack direction="row" spacing={2} sx={{mt:2,ml:2}}>
-    <Avatar
-    onClick={()=>setMapStyle('mapbox://styles/mapbox/dark-v11')}
-    variant="square"
-        alt="Remy Sharp"
-        src="/public/img/basemap/dark-v11.png"
-        sx={{ width: 50, height: 50 }}
-      />
-      <Avatar
-      onClick={()=>setMapStyle('mapbox://styles/clement-marchal/clnn8nr9v002m01pa22h11072')}
-    variant="square"
-        alt="Remy Sharp"
-        src="/public/img/basemap/clnn8nr9v002m01pa22h11072.png"
-        sx={{ width: 50, height: 50 }}
-      />
-    </Stack>
-
-    <Box sx={{ overflow: 'auto' }}>
-        <List
-        dense
-            sx={{ width: '95%', maxWidth: 240, bgcolor: 'background.paper', ml:2, mr:10 }}
-            component="nav"
-            aria-labelledby="nested-list-subheader"
-            subheader={
-                <ListSubheader component="div" id="nested-list-subheader">
-                Layer: 
-                </ListSubheader>
-            }
-            >
-              {layers.map((value,id) => (
-                
-        <ListItem
-          key={value}
-        >
-          {console.log(value.props)}
-            <ListItemText
-                 
-                primary={<Typography variant="caption" >{value.props.id}</Typography>}
-              />
-              <ListItemIcon >
-                 
-                <IconButton aria-label="comments" >
-                  {value.props.visible?<RemoveRedEyeIcon   />:<VisibilityOffIcon   />}
-                </IconButton>
-              </ListItemIcon >
-         
-        </ListItem>
-      ))}
-               
-        </List>
-         
-           
-        </Box>
-
-
+        
+ 
 
       </Drawer>
 
       <Box component="main" sx={{ flexGrow: 1 }}>
         <Toolbar /> 
        
-        <MapEcov simulation={simulation} mapStyle={mapStyle} layersDisplay={[...layers]}   hoverInfo={hoverInfo} setHoverInfo={setHoverInfo} focus={focus} />
+        <MapEcov simulation={simulation} mapStyle={mapStyle} layersDisplay={[...layers,...iconLayer]}   hoverInfo={hoverInfo} setHoverInfo={setHoverInfo} focus={focus} />
          
       </Box>
     </Box>

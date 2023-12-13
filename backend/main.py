@@ -6,7 +6,7 @@ import socketio
 import threading
 import time
 
-from backend.sma.environment.environment import Environment
+from sma.environment.environment import Environment
 
 simulation = Environment()
 
@@ -46,6 +46,8 @@ def another_event(sid, data):
     sim = copy.deepcopy(simulation)
     sim.time=str(sim.tic)
     sim.tic=""
+    sim.tic_min=""
+    sim.tic_max=""
     sio.emit('update', SimEncoder().encode(sim))
 
 @sio.event
@@ -55,5 +57,5 @@ def disconnect(sid):
 if __name__ == '__main__':
     x = threading.Thread(target=thread_function, args=(1,))
     x.start()
-    eventlet.wsgi.server(eventlet.listen(('', 5050)), app)
+    eventlet.wsgi.server(eventlet.listen(('127.0.0.1', 5050)), app)
     

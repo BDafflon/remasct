@@ -1,7 +1,7 @@
 import random
 
-from backend.helper.math import lerp
-from backend.sma.body.fustrum import Fustrum
+from helper.math import lerp
+from sma.body.fustrum import Fustrum
 from time_aware_polyline import decode_time_aware_polyline
 from datetime import datetime, timedelta
 
@@ -17,12 +17,13 @@ def date_to_datetime(dateStr):
     return date_time_obj
 
 class Body:
-    def __init__(self,line):
+    def __init__(self,line,vehicle):
         self.fustrum = Fustrum()
         self.pos = [4.859506014597364,45.77890591958584]
         self.polyline = line
         self.path=  decode_time_aware_polyline(self.polyline)
-        print(self.path)
+        self.visible=True
+        self.vehicle=vehicle
         self.mass=10
         self.vel = 10
 

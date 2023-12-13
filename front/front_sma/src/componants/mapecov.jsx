@@ -60,9 +60,10 @@ export default function MapEcov({mapStyle,layersDisplay, handleClickLayer,hoverI
   const getLayersDisplay=(layersDisplay)=>{
     let layer=[]
     layersDisplay.forEach(element => {
-      layer.push(element)
+      if(element != undefined)
+        layer.push(element)
     });
-    console.log("Map",layer)
+    
     return layer
   }
 
@@ -132,35 +133,9 @@ export default function MapEcov({mapStyle,layersDisplay, handleClickLayer,hoverI
     </DeckGLOverlay>
     <NavigationControl showCompass={false} showZoom={true}/>
     <ScaleControl />
-    {
-      simulation && simulation.agents.map((value)=>{
-        console.log(value)
-        return <Marker color={value.type=="Rider"?"blue":'red'}
-                  anchor= "center"
-                  style={{ zIndex: 30 }}
-                  key={value.uuid}  
-                  longitude={value.body.pos[1]} 
-                  latitude={value.body.pos[0]} 
-                  >    </Marker>
-        
-      })
-    }
+     
 
-    {getLayersDisplay(layersDisplay).map((layer)=>{
-
-            if (layer.props.visible){
-              if(layer.props.marker!=undefined)
-                if(layer.props.marker[0]!=0 && layer.props.marker[1]!=0)
-                  return <Marker color="red"
-                  anchor= "center"
-                  style={{ zIndex: 30 }}
-                  key={layer.props.id}  
-                  longitude={layer.props.marker[0]} 
-                  latitude={layer.props.marker[1]} 
-                  >    </Marker>
-            }
-          }
-        )}
+    
     
 
   </Map>
