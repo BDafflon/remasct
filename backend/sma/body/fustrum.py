@@ -5,5 +5,5 @@ class Fustrum:
         self.radius=100
 
     def inside(self,target, parent):
-        return distance(target.pos,parent.pos) < self.radius
+        return distance(target.pos,parent.pos)*1000,distance(target.pos,parent.pos)*1000 < self.radius
 

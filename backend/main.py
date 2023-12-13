@@ -1,5 +1,5 @@
 import copy
-from json import JSONEncoder
+import json
 
 import eventlet
 import socketio
@@ -17,11 +17,6 @@ def thread_function(name):
         time.sleep(0.1)
         simulation.run(1)
  
-
-class SimEncoder(JSONEncoder):
-    def default(self, o):
-        return o.__dict__
-
 
 
 sio = socketio.Server(cors_allowed_origins='*')
@@ -43,12 +38,17 @@ def my_message(sid, data):
 
 @sio.on('create-something')
 def another_event(sid, data):
-    sim = copy.deepcopy(simulation)
-    sim.time=str(sim.tic)
-    sim.tic=""
-    sim.tic_min=""
-    sim.tic_max=""
-    sio.emit('update', SimEncoder().encode(sim))
+    agentList = simulation.agents.copy()
+    itemList = simulation.items.copy()
+    serializedAgents=[]
+   
+    for a in agentList:
+        serializedAgent={"uuid":a.uuid,"type":a.type,"body":{"pos":a.body.pos,"visible":a.body.visible}}
+        serializedAgents.append(serializedAgent)
+
+
+     
+    sio.emit('update', json.dumps({"agents":serializedAgents,"items":[]}))
 
 @sio.event
 def disconnect(sid):

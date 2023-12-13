@@ -1,7 +1,7 @@
 
 import json
 from datetime import datetime, timedelta
-
+import copy
 import time
 from sma.agent.agent import Agent
 from sma.environment.vehicle import Vehicle
@@ -36,14 +36,17 @@ class Environment:
         perceptions = []
         for a in self.agents:
             if a.uuid != agent.uuid:
-                if agent.body.fustrum.inside(a.body,agent.body):
-                    perceptions.append(a.body)
-        a.perceptionsAgent=perceptions
+                dist,inside = agent.body.fustrum.inside(a.body,agent.body)
+                if inside:
+                    perception = a.body
+                    perception.distance_to=dist
+                    perceptions.append(perception)
+        agent.perceptionsAgent=perceptions[:]
         perceptions=[]
         for i in self.items:
             if agent.body.fustrum.inside(i,agent.body):
                 perceptions.append(i)
-        a.perceptionsItem=perceptions
+        agent.perceptionsItem=perceptions[:]
 
 
     def computeDecision(self,agent):

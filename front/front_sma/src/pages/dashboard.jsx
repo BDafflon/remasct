@@ -54,12 +54,12 @@ export default function Dashboard() {
     const [drawer, setDrawer] = React.useState(true)
     const [mapStyle, setMapStyle ]=React.useState("https://basemaps.cartocdn.com/gl/positron-gl-style/style.json")
     const [simulation, setSimulation] = React.useState(undefined)
-    const [layers, setLayer] = React.useState(getLayers(setHoverInfo,toggleLoading,setFocus))
+    const [layers, setLayer] = React.useState([])
     const [iconLayer, setIconLayer]=React.useState(getIconLayer())
 
   useEffect(() => {
     
-    const timer = setTimeout(() =>  askUpdate(), 1000)
+    const timer = setTimeout(() =>  askUpdate(), 100)
     return () => clearTimeout(timer)
   }, [simulation]);
 

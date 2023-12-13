@@ -31,7 +31,8 @@ export default function IconLayerSma() {
       return []
     let data=[]
     res.agents.forEach(element => {
-      data.push(element)
+      if(element.body.visible)
+        data.push(element)
     });
     res.items.forEach(element => {
       data.push(element)
@@ -39,7 +40,14 @@ export default function IconLayerSma() {
     console.log(data)
     return data
   },
-  getColor: d => d.type=="Rider"?[255,0,0]:[0,255,0],
+  getColor: d => {
+    if(d.type=="CARPOOL")
+      return [0,255,0]
+    if(d.type=="Rider")
+      return [0,0,255]
+    if(d.type=="Driver")
+      return [255,0,0]
+  },
   getIcon: d => d.type=="Rider"?'rider':'driver',
   // getPixelOffset: [0, 0],
   getPosition: d => [d.body.pos[1],d.body.pos[0]],
