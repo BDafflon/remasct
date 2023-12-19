@@ -2,8 +2,8 @@ import json
 import random
 
 
-from sma.body.body import Body
-from sma.environment.messages import Message
+from backend.sma.body.body import Body
+from backend.sma.environment.messages import Message
 
 
 class Agent:

@@ -1,10 +1,10 @@
 import random
 
-from helper.math import lerp
-from sma.body.fustrum import Fustrum
+from backend.helper.math import lerp
+from backend.sma.body.fustrum import Fustrum
 from time_aware_polyline import decode_time_aware_polyline
 from datetime import datetime, timedelta
-from helper.routing import get_route
+from backend.helper.routing import get_route
 
 def date_to_datetime(dateStr):
     try:
