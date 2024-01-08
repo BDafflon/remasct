@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import copy
 import time
 from sma.agent.agent import Agent
-from sma.environment.vehicle import Vehicle
+from sma.item.vehicle import Vehicle
 from json import JSONEncoder
 
 
